@@ -8,38 +8,36 @@ jobs:
       - name: Descomprimir base
         run: |
           ZIP=$(find . -maxdepth 3 -name "*.zip" | head -n 1)
-          echo "ZIP encontrado: $ZIP"
-          if [ -n "$ZIP" ]; then
-            rm -rf NANDOMX_BASE_TEMP
-            mkdir NANDOMX_BASE_TEMP
-            unzip -o "$ZIP" -d NANDOMX_BASE_TEMP
-            rm "$ZIP"
-            PROJECT_DIR=$(find NANDOMX_BASE_TEMP -name "gradlew" | head -n 1 | xargs dirname)
-            echo "Proyecto en: $PROJECT_DIR"
-            cp -r $PROJECT_DIR/* .
-            cp -r $PROJECT_DIR/.* . 2>/dev/null || true
-            rm -rf NANDOMX_BASE_TEMP
-            rm -rf NANDOMX
-          fi
+          echo "ZIP: $ZIP"
+          rm -rf TEMP_BASE
+          mkdir TEMP_BASE
+          unzip -o "$ZIP" -d TEMP_BASE
+          rm "$ZIP"
+          DIR=$(find TEMP_BASE -name "gradlew" | head -n 1 | xargs dirname)
+          echo "DIR: $DIR"
+          cp -r $DIR/* .
+          cp -r $DIR/.* . 2>/dev/null || true
+          rm -rf TEMP_BASE NANDOMX
           ls -la
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
       - uses: android-actions/setup-android@v3
-      - name: Fix Gradle version
+      - name: Fix Gradle 7.6.4
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          WRAPPER_FILE=$(find . -name "gradle-wrapper.properties" | head -n 1)
-          echo "Wrapper: $WRAPPER_FILE"
-          sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' "$WRAPPER_FILE"
-          cat "$WRAPPER_FILE"
+          FILE=$(find . -name "gradle-wrapper.properties" | head -n 1)
+          echo "Antes:"
+          cat $FILE
+          sed -i 's|gradle-.*-all.zip|gradle-7.6.4-all.zip|' $FILE
+          echo "Despues:"
+          cat $FILE
       - name: Compilar APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
-      - name: Subir APK
-        uses: actions/upload-artifact@v4
+          ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
         with:
           name: NANDOMX-APK
           path: app/build/outputs/apk/debug/*.apk
