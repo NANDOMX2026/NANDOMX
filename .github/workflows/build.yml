@@ -1,0 +1,29 @@
+name: Build NANDOMX APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descomprimir base
+        run: |
+          unzip -o "NANDOMX BASE LIMPIA.zip"
+          rm "NANDOMX BASE LIMPIA.zip"
+          mv NANDOMX/* . 2>/dev/null || true
+          mv NANDOMX/.* . 2>/dev/null || true
+          rm -rf NANDOMX
+          ls -la
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Compilar APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Subir APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: NANDOMX-APK
+          path: app/build/outputs/apk/debug/*.apk
