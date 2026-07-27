@@ -5,38 +5,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Descomprimir base
+      - name: Descomprimir
         run: |
-          ZIP=$(find . -maxdepth 3 -name "*.zip" | head -n 1)
-          echo "ZIP: $ZIP"
-          rm -rf TEMP_BASE
-          mkdir TEMP_BASE
-          unzip -o "$ZIP" -d TEMP_BASE
+          ZIP=$(find . -name "*.zip" | head -n 1)
+          rm -rf TEMP
+          mkdir TEMP
+          unzip -o "$ZIP" -d TEMP
           rm "$ZIP"
-          DIR=$(find TEMP_BASE -name "gradlew" | head -n 1 | xargs dirname)
-          echo "DIR: $DIR"
-          cp -r $DIR/* .
-          cp -r $DIR/.* . 2>/dev/null || true
-          rm -rf TEMP_BASE NANDOMX
-          ls -la
+          DIR=$(find TEMP -name "gradlew" | head -n 1 | xargs dirname)
+          echo "DIR=$DIR"
+          cp -R "$DIR"/. .
+          rm -rf TEMP
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
       - uses: android-actions/setup-android@v3
-      - name: Fix Gradle 7.6.4
-        run: |
+      - run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          FILE=$(find . -name "gradle-wrapper.properties" | head -n 1)
-          echo "Antes:"
-          cat $FILE
-          sed -i 's|gradle-.*-all.zip|gradle-7.6.4-all.zip|' $FILE
-          echo "Despues:"
-          cat $FILE
-      - name: Compilar APK
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          F=$(find . -name "gradle-wrapper.properties" | head -n 1)
+          sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' "$F"
+      - run: chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: NANDOMX-APK
