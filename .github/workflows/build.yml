@@ -7,11 +7,17 @@ jobs:
       - uses: actions/checkout@v4
       - name: Descomprimir base
         run: |
-          unzip -o "NANDOMX BASE LIMPIA.zip"
-          rm "NANDOMX BASE LIMPIA.zip"
-          mv NANDOMX/* . 2>/dev/null || true
-          mv NANDOMX/.* . 2>/dev/null || true
-          rm -rf NANDOMX
+          echo "Buscando ZIP..."
+          ls -la
+          ls -la NANDOMX/ || true
+          ZIP=$(find . -maxdepth 3 -name "*.zip" | head -n 1)
+          echo "ZIP encontrado: $ZIP"
+          unzip -o "$ZIP" -d temp_unzip
+          rm "$ZIP" || true
+          # mover todo a la raiz
+          shopt -s dotglob
+          mv temp_unzip/*/* . 2>/dev/null || mv temp_unzip/* . 2>/dev/null || mv temp_unzip/NANDOMX/* . 2>/dev/null || true
+          rm -rf temp_unzip
           ls -la
       - uses: actions/setup-java@v4
         with:
@@ -21,7 +27,7 @@ jobs:
       - name: Compilar APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
       - name: Subir APK
         uses: actions/upload-artifact@v4
         with:
