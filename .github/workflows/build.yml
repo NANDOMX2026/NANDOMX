@@ -8,21 +8,18 @@ jobs:
       - name: Descomprimir base
         run: |
           ZIP=$(find . -maxdepth 3 -name "*.zip" | head -n 1)
-          echo "ZIP: $ZIP"
+          echo "ZIP encontrado: $ZIP"
           if [ -n "$ZIP" ]; then
-            unzip -o "$ZIP" -d temp_unzip
-            rm "$ZIP" || true
-            shopt -s dotglob
-            if [ -d "temp_unzip/NANDOMX BASE LIMPIA" ]; then
-              cp -r temp_unzip/NANDOMX\ BASE\ LIMPIA/* . 2>/dev/null || true
-              cp -r temp_unzip/NANDOMX\ BASE\ LIMPIA/.* . 2>/dev/null || true
-            else
-              FOUND=$(find temp_unzip -name "gradlew" | head -n 1 | xargs dirname)
-              echo "Proyecto en: $FOUND"
-              cp -r $FOUND/* . 2>/dev/null || true
-              cp -r $FOUND/.* . 2>/dev/null || true
-            fi
-            rm -rf temp_unzip NANDOMX
+            rm -rf NANDOMX_BASE_TEMP
+            mkdir NANDOMX_BASE_TEMP
+            unzip -o "$ZIP" -d NANDOMX_BASE_TEMP
+            rm "$ZIP"
+            PROJECT_DIR=$(find NANDOMX_BASE_TEMP -name "gradlew" | head -n 1 | xargs dirname)
+            echo "Proyecto en: $PROJECT_DIR"
+            cp -r $PROJECT_DIR/* .
+            cp -r $PROJECT_DIR/.* . 2>/dev/null || true
+            rm -rf NANDOMX_BASE_TEMP
+            rm -rf NANDOMX
           fi
           ls -la
       - uses: actions/setup-java@v4
@@ -30,14 +27,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - uses: android-actions/setup-android@v3
-      - name: Arreglar compatibilidad Gradle
+      - name: Fix Gradle version
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          # Bajar Gradle a 7.6.3 que es compatible con casi todas las bases
-          if [ -f gradle/wrapper/gradle-wrapper.properties ]; then
-            sed -i 's|distributionUrl.*|distributionUrl=https\\://services.gradle.org/distributions/gradle-7.6.3-all.zip|' gradle/wrapper/gradle-wrapper.properties
-            cat gradle/wrapper/gradle-wrapper.properties
-          fi
+          WRAPPER_FILE=$(find . -name "gradle-wrapper.properties" | head -n 1)
+          echo "Wrapper: $WRAPPER_FILE"
+          sed -i 's/gradle-.*-all.zip/gradle-7.6.4-all.zip/' "$WRAPPER_FILE"
+          cat "$WRAPPER_FILE"
       - name: Compilar APK
         run: |
           chmod +x gradlew
