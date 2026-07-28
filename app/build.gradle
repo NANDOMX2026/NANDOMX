@@ -2,17 +2,25 @@ plugins { id 'com.android.application'; id 'org.jetbrains.kotlin.android' }
 android {
     namespace 'com.nandomx.vpn'
     compileSdk 34
-    defaultConfig { applicationId "com.nandomx.vpn"; minSdk 24; targetSdk 34; versionCode 5; versionName "5.0-FULL-MOTORES" }
-    buildTypes { debug { minifyEnabled false; shrinkResources false } release { minifyEnabled false } }
+    defaultConfig {
+        applicationId "com.nandomx.vpn"
+        minSdk 21; targetSdk 34; versionCode 5; versionName "5.0-FULL"
+        ndk { abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64' }
+    }
+    buildTypes { release { minifyEnabled false } }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    kotlinOptions { jvmTarget = '17' }
+    packaging { jniLibs { useLegacyPackaging = true } }
 }
 dependencies {
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.jcraft:jsch:0.1.55'
-    implementation 'io.netty:netty-all:4.1.100.Final'
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'io.netty:netty-all:4.1.94.Final'
+    implementation 'com.github.2dust:v2rayNG:5.17.0'
+    implementation 'com.github.shadowsocks:shadowsocks-android:5.14.0'
 }
