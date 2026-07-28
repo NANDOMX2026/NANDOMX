@@ -1,0 +1,7 @@
+<resources>
+<string name="app_name">NANDOMX VPN V5</string>
+<string name="conectar">CONECTAR</string>
+<string name="desconectar">DESCONECTAR</string>
+<string name="status_desconectado">NANDOMX V5 - DESCONECTADO</string>
+<string name="status_conectado">NANDOMX V5 - CONECTADO</string>
+</resources>

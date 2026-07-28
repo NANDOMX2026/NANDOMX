@@ -1,0 +1,5 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/nav_config" android:title="Configs" android:icon="@android:drawable/ic_menu_preferences"/>
+<item android:id="@+id/nav_tools" android:title="Herramientas" android:icon="@android:drawable/ic_menu_manage"/>
+<item android:id="@+id/nav_settings" android:title="Ajustes" android:icon="@android:drawable/ic_menu_manage"/>
+</menu>

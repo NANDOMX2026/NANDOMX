@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:background="#0A0A0A">
+<TextView android:text="HERRAMIENTAS NANDOMX" android:textColor="#FFD700" android:textSize="20sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+<Button android:id="@+id/btnPayloadGen" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Payload Generator"/>
+<Button android:id="@+id/btnHostCheck" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Host Checker"/>
+<Button android:id="@+id/btnUdpTest" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="UDP Tester"/>
+<Button android:id="@+id/btnIpHunter" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="IP Hunter"/>
+</LinearLayout>
