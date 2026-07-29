@@ -28,7 +28,7 @@ class MyVpnService : VpnService() {
                 val sni = intent?.getStringExtra("sni") ?: "www.google.com"
                 sslTunnel = SslTunnel(sni)
                 sslTunnel?.start(1080, ip, port)
-                sshTunnel = SshTunnel()
+                sshTunnel = SshTunnel
                 sshTunnel?.start()
                 val payload = intent?.getStringExtra("payload") ?: ""
                 httpProxy = HttpProxy(payload)
